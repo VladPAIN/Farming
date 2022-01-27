@@ -28,19 +28,6 @@ contract Pair {
 
         (uint256 amountA, uint256 amountB, uint256 liquidity) = IUniswapV2Router02(router).addLiquidity(_tokenA, _tokenB, _amountA, _amountB, 1, 1, msg.sender, block.timestamp);
         return (amountA, amountB, liquidity);
-        
-        (uint256 amountA, uint256 amountB, uint256 liquidity) = 
-            IUniswapV2Router02(router).addLiquidity(
-                _tokenA,
-                _tokenB,
-                _amountA,
-                _amountB,
-                1,
-                1,
-                address(this),
-                block.timestamp
-            );
-        
     }
 
 }   
