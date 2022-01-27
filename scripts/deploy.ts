@@ -12,7 +12,7 @@ async function main() {
     const token1 = await Token1.deploy();
   
     await token1.deployed();
-    console.log("Token2 contracts:", token1.address);
+    console.log("Token1 contracts:", token1.address);
 
   //Token2
   console.log("Deploying contracts with the account:", deployer.address);
