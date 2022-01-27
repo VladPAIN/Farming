@@ -38,9 +38,6 @@ contract Pair {
                 block.timestamp
             );
         
-        console.log("amountA:", amountA);
-        console.log("amountB:", amountB);
-        console.log("liquidity:", liquidity);
     }
 
 }   
