@@ -22,12 +22,27 @@ contract Pair {
 
         //address _newPair = IUniswapV2Factory(factory).getPair(_tokenA, _tokenB);
 
+<<<<<<< HEAD
         IERC20(_tokenA).approve(router , _amountA);
         IERC20(_tokenB).approve(router , _amountB);
 
 
         (uint256 amountA, uint256 amountB, uint256 liquidity) = IUniswapV2Router02(router).addLiquidity(_tokenA, _tokenB, _amountA, _amountB, 1, 1, msg.sender, block.timestamp);
         return (amountA, amountB, liquidity);
+=======
+        (uint256 amountA, uint256 amountB, uint256 liquidity) = 
+            IUniswapV2Router02(router).addLiquidity(
+                _tokenA,
+                _tokenB,
+                _amountA,
+                _amountB,
+                1,
+                1,
+                address(this),
+                block.timestamp
+            );
+        
+>>>>>>> 22c4dfecaec4adfa3e877404678dbf2548a715c9
     }
 
 }   
