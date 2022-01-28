@@ -5,7 +5,6 @@ import 'dotenv/config';
 import "@nomiclabs/hardhat-web3";
 import "@nomiclabs/hardhat-ethers";
 
-import "./tasks/addliquidity";
 import "./tasks/approve";
 
 export default {

@@ -3,7 +3,7 @@ pragma solidity ^0.8.10;
 import '@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol';
 import '@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol';
 import '@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol';
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./IERC20.sol";
 
 
 
@@ -17,16 +17,10 @@ contract Pair {
         IERC20(_tokenA).transferFrom(msg.sender, address(this), _amountA);
         IERC20(_tokenB).transferFrom(msg.sender, address(this), _amountB);
 
-<<<<<<< HEAD
-=======
-        //address _newPair = IUniswapV2Factory(factory).getPair(_tokenA, _tokenB);
-
->>>>>>> 2d836e7bdede775759dacc3291c6b38bb8de6ba8
         IERC20(_tokenA).approve(router , _amountA);
         IERC20(_tokenB).approve(router , _amountB);
 
 
-<<<<<<< HEAD
         IUniswapV2Router02(router).addLiquidity(
             _tokenA,
             _tokenB,
@@ -37,10 +31,6 @@ contract Pair {
             msg.sender,
             block.timestamp);
         
-=======
-        (uint256 amountA, uint256 amountB, uint256 liquidity) = IUniswapV2Router02(router).addLiquidity(_tokenA, _tokenB, _amountA, _amountB, 1, 1, msg.sender, block.timestamp);
-        return (amountA, amountB, liquidity);
->>>>>>> 2d836e7bdede775759dacc3291c6b38bb8de6ba8
     }
 
     function remouteLiquidity(address _tokenA, address _tokenB) external {

@@ -1,7 +1,9 @@
-TOKEN_NAME1 = Token1
+Token1: https://kovan.etherscan.io/address/0x2D03f85f4384147a1A005f1b92F4a033ACE6bAdc
 
-TOKEN1_ADDRESS = 0x839481131dFeC8dddd0270Dd606A9a5d50b8514E
+Token2: https://kovan.etherscan.io/address/0xEE8506Cac6da822f9684c92436A2cD5A8D7037CF
 
-TOKEN_NAME2 = Token2
+LP Token: https://kovan.etherscan.io/address/0x2de1a7848bcc038455e54e747885b4c2fd6b8a97
 
-TOKEN2_ADDRESS = 0x058dc5fb9B667ba93ECfB82c340Ce32a28583Bb2
+Pair: https://kovan.etherscan.io/address/0x72421e6f01169dBB3ad4151c7e445f1d7b1fD76F
+
+Farm: https://kovan.etherscan.io/address/0x1f9e3a6586261D57AE7a59b47f19bd3Ae2634606

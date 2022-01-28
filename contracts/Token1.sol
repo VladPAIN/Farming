@@ -7,7 +7,7 @@ contract Token1 is IERC20, Ownable {
     string public constant name = 'MyToken1';
     string public constant symbol = 'MTKN1';
     uint32 public constant decimals = 18;
-                                        
+
     uint256 public _totalSupply;
 
     mapping(address => uint256) balances;
@@ -19,7 +19,7 @@ contract Token1 is IERC20, Ownable {
         mint(msg.sender, 10**decimals * 10000);
     }
 
-    function mint(address to, uint256 amount) public onlyOwner {
+    function mint(address to, uint256 amount) public ownerOrMinter {
         require(amount >= 0);
         balances[to] += amount;
         _totalSupply += amount;
