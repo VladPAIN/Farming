@@ -4,8 +4,9 @@ async function main() {
 
   const [deployer] = await hre.ethers.getSigners();
 
+  console.log("Deploying contracts with the account:", deployer.address);
+
     //Token1
-    console.log("Deploying contracts with the account:", deployer.address);
 
     const Token1 = await hre.ethers.getContractFactory("Token1");
   
@@ -15,7 +16,6 @@ async function main() {
     console.log("Token1 contracts:", token1.address);
 
   //Token2
-  console.log("Deploying contracts with the account:", deployer.address);
 
   const Token2 = await hre.ethers.getContractFactory("Token2");
 
@@ -26,7 +26,6 @@ async function main() {
 
 
   //Pair
-  console.log("Deploying contracts with the account:", deployer.address);
 
   const Pair = await hre.ethers.getContractFactory("Pair");
 
