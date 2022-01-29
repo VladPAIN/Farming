@@ -7,14 +7,22 @@ import "./Ownable.sol";
 
 contract Farm is Ownable {
 
-    // userAddress => stakingBalance
-    mapping(address => uint256) public stakingBalance;
-    // userAddress => isStaking boolean
-    mapping(address => bool) public isStaking;
-    // userAddress => timeStamp
-    mapping(address => uint256) public startTime;
-    // userAddress => token1Balance
-    mapping(address => uint256) public token1Balance;
+    struct poolInfo{
+        uint256 stakingBalance;
+        bool isStaking;
+        uint256 startTime;
+        uint256 token1Balance;
+    }
+
+    mapping(address => poolInfo) public userInfo;
+    // // userAddress => userInfo[msg.sender].stakingBalance
+    // mapping(address => uint256) public userInfo[msg.sender].stakingBalance;
+    // // userAddress => userInfo[msg.sender].isStaking boolean
+    // mapping(address => bool) public userInfo[msg.sender].isStaking;
+    // // userAddress => timeStamp
+    // mapping(address => uint256) public userInfo[msg.sender].startTime;
+    // // userAddress => userInfo[msg.sender].token1Balance
+    // mapping(address => uint256) public userInfo[msg.sender].token1Balance;
    
 
     string public name = "MTKN1 Farm";
@@ -27,7 +35,7 @@ contract Farm is Ownable {
 
     address pair = IUniswapV2Factory(factory).getPair(0x2D03f85f4384147a1A005f1b92F4a033ACE6bAdc, 0xEE8506Cac6da822f9684c92436A2cD5A8D7037CF);
 
-    uint256 timeLock = 600;
+    uint256 timeLock = 60;
     uint256 proccentRewars = 20;
 
     event Stake(address indexed from, uint256 amount);
@@ -45,51 +53,49 @@ contract Farm is Ownable {
     function stake(uint256 amount) public {
         require(amount > 0 && IERC20(pair).balanceOf(msg.sender) >= amount, "You cannot stake zero tokens");
         
-        if(isStaking[msg.sender] == true ) {
+        if(userInfo[msg.sender].isStaking == true ) {
             uint256 tokenReward = totalReward(msg.sender);
-            token1Balance[msg.sender] += tokenReward;
+            userInfo[msg.sender].token1Balance += tokenReward;
         }
 
         IERC20(pair).transferFrom(msg.sender, address(this), amount);
-        stakingBalance[msg.sender] += amount;
-        startTime[msg.sender] = block.timestamp;
-        isStaking[msg.sender] = true;
+        userInfo[msg.sender].stakingBalance += amount;
+        userInfo[msg.sender].startTime = block.timestamp;
+        userInfo[msg.sender].isStaking = true;
         emit Stake(msg.sender, amount);
     }
 
     function timeStaking(address user) public view returns(uint256) {
-        uint endStake = block.timestamp;
-        uint totalTime = endStake - startTime[user];
+        uint totalTime = block.timestamp - userInfo[user].startTime;
         return totalTime;
     }
 
     function totalReward(address user) public view returns(uint256) {
-        uint256 time = timeStaking(user) * 10**18;
-        uint256 amountReward = time / timeLock;
-        uint tokenReward = (stakingBalance[user] * amountReward * proccentRewars / 100) / 10**18;
+        uint256 amountReward = timeStaking(user) / timeLock;
+        uint tokenReward = (userInfo[user].stakingBalance * amountReward * proccentRewars / 100);
         return tokenReward; 
     }
 
     function unstake(uint256 amount) public {
         require(
-            isStaking[msg.sender] = true &&
+            userInfo[msg.sender].isStaking = true &&
             timeStaking(msg.sender) >= timeLock &&
-            stakingBalance[msg.sender] >= amount,
+            userInfo[msg.sender].stakingBalance >= amount,
             "Tokens is locked"
         );
 
         uint totalReward = totalReward(msg.sender);
-        startTime[msg.sender] = block.timestamp;
+        userInfo[msg.sender].startTime = block.timestamp;
         uint256 balanceTransfer = amount;
         amount = 0;
 
-        stakingBalance[msg.sender] -= balanceTransfer;
+        userInfo[msg.sender].stakingBalance -= balanceTransfer;
 
         IERC20(pair).transfer(msg.sender, balanceTransfer);
-        token1Balance[msg.sender] += totalReward;
+        userInfo[msg.sender].token1Balance += totalReward;
 
-        if(stakingBalance[msg.sender] == 0){
-            isStaking[msg.sender] = false;
+        if(userInfo[msg.sender].stakingBalance == 0){
+            userInfo[msg.sender].isStaking = false;
         }
         emit Unstake(msg.sender, amount);
     }
@@ -98,15 +104,16 @@ contract Farm is Ownable {
 
         uint256 toClaim = totalReward(msg.sender);
 
-        require(isStaking[msg.sender] == true && (toClaim > 0 || token1Balance[msg.sender] > 0), "You dont have tokens in stack");
+        // require(userInfo[msg.sender].isStaking[msg.sender], "You dont have tokens in stake");
+        // require(toClaim > 0 || userInfo[msg.sender].token1Balance[msg.sender] > 0, "You dont have reward tokens");
         
-        if(token1Balance[msg.sender] != 0) {
-            uint unclaimBalance = token1Balance[msg.sender];
+        if(userInfo[msg.sender].token1Balance != 0) {
+            uint unclaimBalance = userInfo[msg.sender].token1Balance;
             toClaim += unclaimBalance;
-            token1Balance[msg.sender] = 0;
+            userInfo[msg.sender].token1Balance = 0;
         }
 
-        startTime[msg.sender] = block.timestamp;
+        userInfo[msg.sender].startTime = block.timestamp;
         token1.mint(msg.sender, toClaim);
         emit Claim(msg.sender, toClaim);
     } 
