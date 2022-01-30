@@ -13,16 +13,6 @@ contract Farm is Ownable {
         uint256 startTime;
         uint256 token1Balance;
     }
-
-    mapping(address => poolInfo) public userInfo;
-    // // userAddress => userInfo[msg.sender].stakingBalance
-    // mapping(address => uint256) public userInfo[msg.sender].stakingBalance;
-    // // userAddress => userInfo[msg.sender].isStaking boolean
-    // mapping(address => bool) public userInfo[msg.sender].isStaking;
-    // // userAddress => timeStamp
-    // mapping(address => uint256) public userInfo[msg.sender].startTime;
-    // // userAddress => userInfo[msg.sender].token1Balance
-    // mapping(address => uint256) public userInfo[msg.sender].token1Balance;
    
 
     string public name = "MTKN1 Farm";

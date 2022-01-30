@@ -6,4 +6,4 @@ LP Token: https://kovan.etherscan.io/address/0x2de1a7848bcc038455e54e747885b4c2f
 
 Pair: https://kovan.etherscan.io/address/0x72421e6f01169dBB3ad4151c7e445f1d7b1fD76F
 
-Farm: https://kovan.etherscan.io/address/0x6a6a34071d666c7D50aA338b3e329C7315d65329
+Farm: https://kovan.etherscan.io/address/0x1B0cF3e2E43c7aA4610c7Cec97a9164d68C8Df4D
