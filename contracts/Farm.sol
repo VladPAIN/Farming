@@ -14,16 +14,22 @@ contract Farm is Ownable {
         uint256 token1Balance;
     }
    
+    mapping(address => poolInfo) public userInfo;
 
     string public name = "MTKN1 Farm";
 
-    address public factory = 0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f;
+    address public factory;
 
     Token1 public token1;
     Token2 public token2;
     // Pair public pair;
+    address public pair;
 
-    address pair = IUniswapV2Factory(factory).getPair(0x2D03f85f4384147a1A005f1b92F4a033ACE6bAdc, 0xEE8506Cac6da822f9684c92436A2cD5A8D7037CF);
+    constructor(address _token1, address _token2, address _pair) {
+        token1 = Token1(_token1);
+        token2 = Token2(_token2);
+        pair = _pair;
+    }
 
     uint256 timeLock = 60;
     uint256 proccentRewars = 20;
@@ -32,13 +38,38 @@ contract Farm is Ownable {
     event Unstake(address indexed from, uint256 amount);
     event Claim(address indexed to, uint256 amount);
 
-    function changeTimeLock(uint256 newTime) public onlyOwner {
-        timeLock = newTime;
+    function getStakingBalance() public view returns (uint){
+        return userInfo[msg.sender].stakingBalance;
+    }
+
+    function getIsStaking() public view returns (bool){
+        return userInfo[msg.sender].isStaking;
+    }
+
+    function getStartTime() public view returns (uint){
+        return userInfo[msg.sender].startTime;
+    }
+
+    function getToken1Balance() public view returns (uint){
+        return userInfo[msg.sender].token1Balance;
+    }
+
+    function getProccentRewars() public view returns (uint) {
+        return proccentRewars;
+    }
+
+    function getTimeLock() public view returns (uint) {
+        return timeLock;
     }
 
     function changeProccentRewars(uint256 newProccentRewars) public onlyOwner {
         proccentRewars = newProccentRewars;
     }
+
+    function changeTimeLock(uint256 newTime) public onlyOwner {
+        timeLock = newTime;
+    }
+
 
     function stake(uint256 amount) public {
         require(amount > 0 && IERC20(pair).balanceOf(msg.sender) >= amount, "You cannot stake zero tokens");

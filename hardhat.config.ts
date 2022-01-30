@@ -12,7 +12,8 @@ export default {
   networks: {
     kovan: {
       url: `${process.env.KOVAN_API_KEY}`,
-      accounts: [`${process.env.PRIVATE_KEY}`]
+      accounts: [`${process.env.PRIVATE_KEY}`],
+      timeout: 60000
     }
   },
   etherscan: {
