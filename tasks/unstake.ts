@@ -8,7 +8,7 @@ task("unstake", "Stake")
 
 
 
-        const farm = await hre.ethers.getContractAt(process.env.FARM_NAME, process.env.FARM_ADDRESS);
+        const farm = await hre.ethers.getContractAt("Farm", process.env.FARM_ADDRESS);
         await (await farm.unstake(hre.ethers.utils.parseUnits(args.amount, process.env.TOKEN_DECIMALS))).wait()
         console.log("You are unstaked: ", args.amount, " tokens");
  
