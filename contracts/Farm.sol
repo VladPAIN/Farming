@@ -13,7 +13,8 @@ contract Farm is Ownable {
         uint256 startTime;
         uint256 token1Balance;
     }
-   
+    
+    mapping(address => poolInfo) public userInfo;
 
     string public name = "MTKN1 Farm";
 
