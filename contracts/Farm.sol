@@ -7,31 +7,25 @@ import "./Ownable.sol";
 
 contract Farm is Ownable {
 
-    struct poolInfo{
+    struct UserInfo{
         uint256 stakingBalance;
-        bool isStaking;
         uint256 startTime;
-        uint256 token1Balance;
+        uint256 rewordsBalance;
     }
-    mapping(address => poolInfo) public userInfo;
+    mapping(address => UserInfo) public userInfo;
 
     string public name = "MTKN1 Farm";
 
-    address public factory;
+    Token1 public rewordsToken;
+    address public LPtoken;
 
-    Token1 public token1;
-    Token2 public token2;
-    // Pair public pair;
-    address public pair;
-
-    constructor(address _token1, address _token2, address _pair) {
-        token1 = Token1(_token1);
-        token2 = Token2(_token2);
-        pair = _pair;
+    constructor(address _rewordsToken, address _LPtoken) {
+        rewordsToken = Token1(_rewordsToken);
+        LPtoken = _LPtoken;
     }
 
-    uint256 timeLock = 60;
-    uint256 proccentRewars = 20;
+    uint256 timeLock = 600;
+    uint256 proccentRewards = 200;
 
     event Stake(address indexed from, uint256 amount);
     event Unstake(address indexed from, uint256 amount);
@@ -41,28 +35,24 @@ contract Farm is Ownable {
         return userInfo[msg.sender].stakingBalance;
     }
 
-    function getIsStaking() public view returns (bool){
-        return userInfo[msg.sender].isStaking;
-    }
-
     function getStartTime() public view returns (uint){
         return userInfo[msg.sender].startTime;
     }
 
-    function getToken1Balance() public view returns (uint){
-        return userInfo[msg.sender].token1Balance;
+    function getRewordsTokenBalance() public view returns (uint){
+        return userInfo[msg.sender].rewordsBalance;
     }
 
-    function getProccentRewars() public view returns (uint) {
-        return proccentRewars;
+    function getProccentRewards() public view returns (uint) {
+        return proccentRewards;
     }
 
     function getTimeLock() public view returns (uint) {
         return timeLock;
     }
 
-    function changeProccentRewars(uint256 newProccentRewars) public onlyOwner {
-        proccentRewars = newProccentRewars;
+    function changeProccentRewards(uint256 newProccentRewards) public onlyOwner {
+        proccentRewards = newProccentRewards;
     }
 
     function changeTimeLock(uint256 newTime) public onlyOwner {
@@ -71,17 +61,16 @@ contract Farm is Ownable {
 
 
     function stake(uint256 amount) public {
-        require(amount > 0 && IERC20(pair).balanceOf(msg.sender) >= amount, "You cannot stake zero tokens");
+        require(amount > 0 && IERC20(LPtoken).balanceOf(msg.sender) >= amount, "You cannot stake zero tokens");
         
-        if(userInfo[msg.sender].isStaking == true ) {
+        if(userInfo[msg.sender].startTime != 0) {
             uint256 tokenReward = totalReward(msg.sender);
-            userInfo[msg.sender].token1Balance += tokenReward;
+            userInfo[msg.sender].rewordsBalance += tokenReward;
         }
 
-        IERC20(pair).transferFrom(msg.sender, address(this), amount);
+        IERC20(LPtoken).transferFrom(msg.sender, address(this), amount);
         userInfo[msg.sender].stakingBalance += amount;
         userInfo[msg.sender].startTime = block.timestamp;
-        userInfo[msg.sender].isStaking = true;
         emit Stake(msg.sender, amount);
     }
 
@@ -92,13 +81,12 @@ contract Farm is Ownable {
 
     function totalReward(address user) public view returns(uint256) {
         uint256 amountReward = timeStaking(user) / timeLock;
-        uint tokenReward = (userInfo[user].stakingBalance * amountReward * proccentRewars / 100);
+        uint tokenReward = (userInfo[user].stakingBalance * amountReward * proccentRewards / 1000);
         return tokenReward; 
     }
 
     function unstake(uint256 amount) public {
         require(
-            userInfo[msg.sender].isStaking = true &&
             timeStaking(msg.sender) >= timeLock &&
             userInfo[msg.sender].stakingBalance >= amount,
             "Tokens is locked"
@@ -106,35 +94,28 @@ contract Farm is Ownable {
 
         uint totalReward = totalReward(msg.sender);
         userInfo[msg.sender].startTime = block.timestamp;
-        uint256 balanceTransfer = amount;
-        amount = 0;
 
-        userInfo[msg.sender].stakingBalance -= balanceTransfer;
+        userInfo[msg.sender].stakingBalance -= amount;
 
-        IERC20(pair).transfer(msg.sender, balanceTransfer);
-        userInfo[msg.sender].token1Balance += totalReward;
+        IERC20(LPtoken).transfer(msg.sender, amount);
+        userInfo[msg.sender].rewordsBalance += totalReward;
 
-        if(userInfo[msg.sender].stakingBalance == 0){
-            userInfo[msg.sender].isStaking = false;
-        }
         emit Unstake(msg.sender, amount);
     }
 
     function claim() public {
-
+        require(totalReward(msg.sender) > 0 || userInfo[msg.sender].rewordsBalance > 0, "You dont have reward tokens");
+        require(timeStaking(msg.sender) >= timeLock, "Your tokens are locked, the staking time has not passed yet");
         uint256 toClaim = totalReward(msg.sender);
-
-        // require(userInfo[msg.sender].isStaking[msg.sender], "You dont have tokens in stake");
-        // require(toClaim > 0 || userInfo[msg.sender].token1Balance[msg.sender] > 0, "You dont have reward tokens");
         
-        if(userInfo[msg.sender].token1Balance != 0) {
-            uint unclaimBalance = userInfo[msg.sender].token1Balance;
+        if(userInfo[msg.sender].rewordsBalance != 0) {
+            uint unclaimBalance = userInfo[msg.sender].rewordsBalance;
             toClaim += unclaimBalance;
-            userInfo[msg.sender].token1Balance = 0;
+            userInfo[msg.sender].rewordsBalance = 0;
         }
 
         userInfo[msg.sender].startTime = block.timestamp;
-        token1.mint(msg.sender, toClaim);
+        rewordsToken.transfer(msg.sender, toClaim);
         emit Claim(msg.sender, toClaim);
     } 
 

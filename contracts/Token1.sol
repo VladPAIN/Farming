@@ -2,11 +2,14 @@ pragma solidity ^0.8.10;
 
 import "./Ownable.sol";
 import "./IERC20.sol";
+//import '@openzeppelin/contracts/access/AccessControl.sol';
 
 contract Token1 is IERC20, Ownable {
     string public constant name = 'MyToken1';
     string public constant symbol = 'MTKN1';
     uint32 public constant decimals = 18;
+
+    //bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
     uint256 public _totalSupply;
 
@@ -17,9 +20,12 @@ contract Token1 is IERC20, Ownable {
 
     constructor() {
         mint(msg.sender, 10**decimals * 10000);
+        // _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        // _setupRole(MINTER_ROLE, msg.sender);
     }
 
-    function mint(address to, uint256 amount) public ownerOrMinter {
+    function mint(address to, uint256 amount) public onlyOwner {
+        // require(hasRole(MINTER_ROLE, msg.sender), "Caller is not a minter");
         require(amount >= 0);
         balances[to] += amount;
         _totalSupply += amount;

@@ -1,11 +1,7 @@
 pragma solidity ^0.8.10;
 
-import '@openzeppelin/contracts/access/AccessControl.sol';
-
-abstract contract Ownable is AccessControl {
+abstract contract Ownable {
   address private _owner;
-
-  bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
   event OwnershipTransferred(
     address indexed previousOwner,
@@ -15,7 +11,6 @@ abstract contract Ownable is AccessControl {
 
   constructor() {
         _owner = msg.sender;
-        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
 
@@ -26,11 +21,6 @@ abstract contract Ownable is AccessControl {
 
   modifier onlyOwner() {
     require(isOwner(), "Is not owner");
-    _;
-  }
-
-  modifier ownerOrMinter() {
-    require(hasRole(MINTER_ROLE, msg.sender) || isOwner(), "Caller is not the minter or owner");
     _;
   }
 

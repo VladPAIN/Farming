@@ -1,9 +1,13 @@
-Token1: https://kovan.etherscan.io/address/0x2D03f85f4384147a1A005f1b92F4a033ACE6bAdc
+Token1: https://kovan.etherscan.io/address/0xF4FcD0f8F5424E97C58dc5847A8Fa52BA329C247
 
-Token2: https://kovan.etherscan.io/address/0xEE8506Cac6da822f9684c92436A2cD5A8D7037CF
+Token2: https://kovan.etherscan.io/address/0x001d85C64e3a83cc41a2e8519FDd11dA5d296D5f
 
-LP Token: https://kovan.etherscan.io/address/0x2de1a7848bcc038455e54e747885b4c2fd6b8a97
+LP Token: https://kovan.etherscan.io/token/0x053a03f2b6bbf5031c9bb95b4a05d937408c9fb0
 
-Pair: https://kovan.etherscan.io/address/0x72421e6f01169dBB3ad4151c7e445f1d7b1fD76F
+Pair: https://kovan.etherscan.io/address/0x63858f70bc45204d28b96196e6c0713bfa36b7fb
 
-Farm: https://kovan.etherscan.io/address/0x1B0cF3e2E43c7aA4610c7Cec97a9164d68C8Df4D
+Farm: https://kovan.etherscan.io/address/0xE2ecE4017cAF232E5187b30004caeE0126e1ac1e
+
+Coverage:
+
+![alt text](coverage.jpg)
